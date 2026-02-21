@@ -1,213 +1,179 @@
-# Lab 01 — Basic Packet Capture & Analysis (Wireshark)
+# SOC Lab 02 — Packet Capture & Network Analysis (Wireshark)
 
-## Objective
-Capture a small sample of real network traffic and identify:
-- Your local IP address
-- Your default gateway
-- One DNS query
-- One TCP 3-way handshake
-- One ARP request/response (if present)
-
-This lab is designed to be quick and beginner-friendly while reinforcing core networking concepts.
-
----
-
-## Lab Time
-~15–30 minutes
+## 📑 Table of Contents
+1. [Executive Summary](#executive-summary)
+2. [Lab Objectives](#lab-objectives)
+3. [Environment Overview](#environment-overview)
+4. [Capture Workflow](#capture-workflow)
+5. [Packet Analysis](#packet-analysis)
+6. [Detection Engineering Insights](#detection-engineering-insights)
+7. [Evidence](#evidence)
+8. [Conclusions](#conclusions)
+9. [Next Steps](#next-steps)
 
 ---
 
-## Requirements
-Choose one setup:
+## Executive Summary
+This lab demonstrates foundational SOC analyst skills by capturing and analyzing network traffic using Wireshark.  
+The objective is to understand how core protocols behave on the wire — DNS, ARP, TCP — and how these artifacts support security detection, threat hunting, and incident investigations.
 
-### Option A (Recommended): Kali Linux
-- Kali Linux (VM or bare metal)
-- Wireshark installed (often preinstalled)
-
-### Option B: Ubuntu / Linux Mint
-- Ubuntu/Mint
-- Wireshark installed
-
-> Note: Capturing on an interface may require elevated permissions.
+Packet captures (pcap files) form the bedrock of network forensics, enabling analysts to observe traffic at Layers 2–7 and identify malicious behavior in real time.  
+All evidence is documented and stored in the `screenshots/` directory.
 
 ---
 
-## Tools
-- Wireshark
-- Terminal (optional)
+## Lab Objectives
+- Launch and operate Wireshark on Linux  
+- Capture live network traffic from the correct interface  
+- Analyze packet structures at multiple OSI layers  
+- Identify DNS queries, TCP handshakes, and ARP frames  
+- Understand how Wireshark can support SOC investigations  
+- Document findings using SOC-style evidence formatting  
 
 ---
 
-## Safety / Scope
-This lab is **defensive** and is only for capturing traffic on your own machine/network.
+## Environment Overview
+**Host OS:** Ubuntu Linux (VMware Workstation)  
+**Tools Used:**  
+- Wireshark  
+- ICMP (`ping`)  
+- DNS tools (browser queries)  
+- Git + GitHub  
 
 ---
 
-## Step 1 — Install Wireshark (if needed)
+## Capture Workflow
 
-### Kali
-Wireshark is usually installed. If not:
+### 1. Identify Active Network Interface
+Selected the correct network interface (e.g., `ens33`) based on traffic volume.
+
+---
+
+### 2. Start Packet Capture
+Began live capture, validating traffic flow via constant packet updates.
+
+---
+
+### 3. Generate Traffic for Analysis
+
+**DNS Traffic Trigger**
 ```bash
-sudo apt update
-sudo apt install -y wireshark
+ping -c 4 google.com
 ```
 
-### Ubuntu / Mint
-```bash
-sudo apt update
-sudo apt install -y wireshark
-```
+**HTTP Traffic Trigger**  
+Opened a website in the browser to generate TCP, DNS, and HTTP/HTTPS traffic.
 
 ---
 
-## Step 2 — Identify Your Network Interface
-In a terminal:
-```bash
-ip a
-```
-
-Look for your active interface, typically:
-- `eth0` (wired) or
-- `wlan0` (wireless)
+### 4. Stop and Save Capture
+Capture stopped and saved as a `.pcapng` file for later review.
 
 ---
 
-## Step 3 — Start a Packet Capture
-1. Open Wireshark  
-2. Select your active interface (e.g., `eth0` / `wlan0`)  
-3. Click the blue shark fin to start capture  
-4. Generate traffic for ~10–20 seconds by doing ONE of these:
-   - Open a website in your browser  
-   - Run:  
-     ```bash
-     ping -c 4 1.1.1.1
-     ```
-     and:
-     ```bash
-     nslookup example.com
-     ```
-5. Stop capture (red square button)
+## Packet Analysis
 
----
+### 🔹 DNS Query Inspection
 
-## Step 4 — Find Your Local IP Address
-### Method A (Terminal)
-```bash
-ip a
-```
-
-### Method B (Wireshark)
-- Click any packet  
-- Look in the **IP** layer for `Source` / `Destination`  
-- Identify your local RFC1918 address (often `192.168.x.x`, `10.x.x.x`, or `172.16–31.x.x`)
-
-✅ **Deliverable**
-- Record your local IP address here:
-  - `Local IP: ____________________`
-
----
-
-## Step 5 — Find Your Default Gateway
-### Method A (Terminal)
-```bash
-ip route
-```
-
-Look for the line like:
-- `default via 192.168.1.1 dev wlan0`
-
-✅ **Deliverable**
-- Record your default gateway:
-  - `Default Gateway: ____________________`
-
----
-
-## Step 6 — Identify a DNS Query
-In Wireshark, use this display filter:
-```
+**Filter used:**
+```text
 dns
 ```
 
-Click a DNS packet and look for:
-- `Standard query`  
-- The domain name requested (e.g., `example.com`)  
-- The response with the resolved IP (if you captured both)
-
-✅ **Deliverables**
-- Domain queried: `____________________`  
-- Resolved IP (if present): `____________________`
-
-📸 Screenshot suggestion:
-- Take a screenshot showing the DNS query details pane.
+**Observations:**
+- Query type (A/AAAA records)  
+- UDP transport characteristics  
+- Resolved IP address  
+- Recursive resolution behavior  
 
 ---
 
-## Step 7 — Identify a TCP 3-Way Handshake
-In Wireshark, filter:
+### 🔹 TCP 3-Way Handshake
+
+**Filter used:**
+```text
+tcp.flags.syn==1
 ```
-tcp.flags.syn == 1 || tcp.flags.ack == 1
-```
 
-Find a handshake sequence:
-1. **SYN**  
-2. **SYN, ACK**  
-3. **ACK**
-
-Tip:
-- Click a SYN packet → Right-click → **Follow → TCP Stream** (optional)
-
-✅ **Deliverables**
-- Handshake observed between:
-  - Source IP: `____________________`
-  - Destination IP: `____________________`
-  - Destination Port: `____________________` (often 443 or 80)
-
-📸 Screenshot suggestion:
-- Capture the three packets (SYN, SYN-ACK, ACK) in the packet list.
+**Observations:**
+- SYN → SYN-ACK → ACK sequence  
+- Sequence and acknowledgment numbers  
+- MSS and Window Size options  
+- Evidence of normal TCP session establishment  
 
 ---
 
-## Step 8 — Identify ARP (Local Network Resolution)
-Filter:
-```
+### 🔹 ARP Request/Reply
+
+**Filter used:**
+```text
 arp
 ```
 
-If you see ARP:
-- Look for “Who has X.X.X.X? Tell Y.Y.Y.Y”  
-- Then a reply with the MAC address  
-
-✅ **Deliverables**
-- ARP “Who has” target IP: `____________________`  
-- ARP reply MAC address (if present): `____________________`
+**Observations:**
+- ARP Request: “Who has <IP>?”  
+- ARP Reply: “<IP> is at <MAC Address>”  
+- Confirms L2 resolution and local network device mapping  
 
 ---
 
-## Results / Notes
-Write 3–5 bullet points about what you observed:
-- Example: “Most web traffic used TCP/443 (HTTPS).”
-- Example: “DNS queries were in plaintext (UDP/53) on my network.”
-- Example: “ARP appeared when my device looked up the gateway MAC.”
+## Detection Engineering Insights
+
+Packet captures support SOC teams in:
+
+### 🚨 Threat Detection
+- Identifying suspicious DNS queries  
+- Detecting beaconing or repeating packet patterns  
+- Observing failed TCP session attempts (useful for recon detection)  
+- Detecting ARP spoofing or poisoning attacks  
+
+### 🕵️ Incident Response
+- Provides packet-level ground truth  
+- Shows raw traffic behavior independent of logs  
+- Supports timeline reconstruction  
+- Helps confirm exfiltration, command-and-control, or scanning  
+
+### 📡 Baselining
+Understanding normal traffic patterns helps analysts quickly distinguish anomalies.
 
 ---
 
-## Export (Optional but Nice for GitHub)
-Save your capture:
-- `File → Save As`
-- Name it: `lab01_capture.pcapng`
+## Evidence
 
-> If you don’t want to upload raw traffic, don’t commit the pcap.  
-> You can upload only screenshots + notes.
+All screenshots are stored in `/screenshots`:
 
----
+- Wireshark interface selection  
+- Live capture view  
+- DNS packet expanded  
+- TCP handshake  
+- ARP request/reply  
+- Saved capture confirmation  
 
-## Reflection Questions (Optional)
-1. Why does DNS often use UDP instead of TCP?
-2. What does ARP do that DNS does not?
-3. Why is the TCP handshake required before most web traffic?
+Each screenshot validates a specific stage of the lab and proves hands-on execution.
 
 ---
 
-## Cleanup
-Close Wireshark. No system changes are required.
+## Conclusions
 
+This lab demonstrates fundamental network forensics capabilities using Wireshark, including:
+
+- DNS inspection  
+- TCP handshake analysis  
+- ARP packet interpretation  
+- Interface selection and capture workflow  
+
+These are essential skills for SOC analysts, threat hunters, and IR teams.
+
+---
+
+## Next Steps
+
+To continue developing strong SOC skills:
+
+- **SOC Lab 03 — Detecting TCP Port Scanning**
+- Analyze DNS exfiltration behavior  
+- Work with Suricata or Zeek logs  
+- Network baseline profiling  
+- Create detection rules for packet anomalies  
+
+This lab establishes strong foundations for advanced network detection workflows.
