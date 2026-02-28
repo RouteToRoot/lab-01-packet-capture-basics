@@ -1,6 +1,6 @@
-# SOC Lab 02 — Packet Capture & Network Analysis (Wireshark)
+# # SOC Lab 01 — Packet Capture & Network Analysis (Wireshark)
 
-## 📑 Table of Contents
+## Table of Contents
 1. [Executive Summary](#executive-summary)
 2. [Lab Objectives](#lab-objectives)
 3. [Environment Overview](#environment-overview)
@@ -46,11 +46,17 @@ All evidence is documented and stored in the `screenshots/` directory.
 
 ### 1. Identify Active Network Interface
 Selected the correct network interface (e.g., `ens33`) based on traffic volume.
+**Evidence:**  
+See `screenshots/interface-selected.png`  
+(This screenshot should show the Wireshark interface list with the active interface highlighted.)
 
 ---
 
 ### 2. Start Packet Capture
 Began live capture, validating traffic flow via constant packet updates.
+
+**Evidence:**  
+See `screenshots/live-capture.png`
 
 ---
 
@@ -64,16 +70,22 @@ ping -c 4 google.com
 **HTTP Traffic Trigger**  
 Opened a website in the browser to generate TCP, DNS, and HTTP/HTTPS traffic.
 
+**Evidence:**  
+See `screenshots/traffic-generated.png`
+
 ---
 
 ### 4. Stop and Save Capture
 Capture stopped and saved as a `.pcapng` file for later review.
 
+**Evidence:**  
+See `screenshots/capture-saved.png`
+
 ---
 
 ## Packet Analysis
 
-### 🔹 DNS Query Inspection
+### DNS Query Inspection
 
 **Filter used:**
 ```text
@@ -84,11 +96,14 @@ dns
 - Query type (A/AAAA records)  
 - UDP transport characteristics  
 - Resolved IP address  
-- Recursive resolution behavior  
+- Recursive resolution behavior
+- 
+- **Evidence:**  
+See `screenshots/dns-query.png`  
 
 ---
 
-### 🔹 TCP 3-Way Handshake
+### TCP 3-Way Handshake
 
 **Filter used:**
 ```text
@@ -99,21 +114,27 @@ tcp.flags.syn==1
 - SYN → SYN-ACK → ACK sequence  
 - Sequence and acknowledgment numbers  
 - MSS and Window Size options  
-- Evidence of normal TCP session establishment  
+- Evidence of normal TCP session establishment
+
+- **Evidence:**  
+See `screenshots/tcp-handshake.png`  
 
 ---
 
-### 🔹 ARP Request/Reply
+### ARP Request/Reply
 
-**Filter used:**
-```text
+Filter used:
+
 arp
-```
 
-**Observations:**
-- ARP Request: “Who has <IP>?”  
-- ARP Reply: “<IP> is at <MAC Address>”  
-- Confirms L2 resolution and local network device mapping  
+Observations:
+
+- ARP Request: “Who has <IP address>?”
+- ARP Reply: “<IP address> is at <MAC address>”
+- This shows how devices discover each other on the local network (Layer 2)
+
+- **Evidence:**  
+See `screenshots/arp-traffic.png`
 
 ---
 
@@ -121,19 +142,19 @@ arp
 
 Packet captures support SOC teams in:
 
-### 🚨 Threat Detection
+### Threat Detection
 - Identifying suspicious DNS queries  
 - Detecting beaconing or repeating packet patterns  
 - Observing failed TCP session attempts (useful for recon detection)  
 - Detecting ARP spoofing or poisoning attacks  
 
-### 🕵️ Incident Response
+### Incident Response
 - Provides packet-level ground truth  
 - Shows raw traffic behavior independent of logs  
 - Supports timeline reconstruction  
 - Helps confirm exfiltration, command-and-control, or scanning  
 
-### 📡 Baselining
+### Baselining
 Understanding normal traffic patterns helps analysts quickly distinguish anomalies.
 
 ---
@@ -142,13 +163,18 @@ Understanding normal traffic patterns helps analysts quickly distinguish anomali
 
 All screenshots are stored in `/screenshots`:
 
-- Wireshark interface selection  
-- Live capture view  
-- DNS packet expanded  
-- TCP handshake  
-- ARP request/reply  
-- Saved capture confirmation  
+## Evidence
 
+All screenshots are stored in the `/screenshots` directory:
+
+- `interface-selected.png` — Wireshark interface chosen  
+- `live-capture.png` — live packet capture in progress  
+- `traffic-generated.png` — DNS/HTTP traffic generation  
+- `capture-saved.png` — pcap file saved  
+- `dns-query.png` — DNS packet filtered and expanded  
+- `tcp-handshake.png` — SYN → SYN/ACK → ACK sequence  
+- `arp-traffic.png` — ARP request and reply frames
+ 
 Each screenshot validates a specific stage of the lab and proves hands-on execution.
 
 ---
