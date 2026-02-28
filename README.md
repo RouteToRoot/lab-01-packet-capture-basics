@@ -46,6 +46,7 @@ All evidence is documented and stored in the `screenshots/` directory.
 
 ### 1. Identify Active Network Interface
 Selected the correct network interface (e.g., `ens33`) based on traffic volume.
+
 **Evidence:**  
 See `screenshots/interface-selected.png`  
 (This screenshot should show the Wireshark interface list with the active interface highlighted.)
@@ -97,8 +98,8 @@ dns
 - UDP transport characteristics  
 - Resolved IP address  
 - Recursive resolution behavior
-- 
-- **Evidence:**  
+ 
+**Evidence:**  
 See `screenshots/dns-query.png`  
 
 ---
@@ -116,7 +117,7 @@ tcp.flags.syn==1
 - MSS and Window Size options  
 - Evidence of normal TCP session establishment
 
-- **Evidence:**  
+**Evidence:**  
 See `screenshots/tcp-handshake.png`  
 
 ---
@@ -133,7 +134,7 @@ Observations:
 - ARP Reply: “<IP address> is at <MAC address>”
 - This shows how devices discover each other on the local network (Layer 2)
 
-- **Evidence:**  
+**Evidence:**  
 See `screenshots/arp-traffic.png`
 
 ---
@@ -158,10 +159,6 @@ Packet captures support SOC teams in:
 Understanding normal traffic patterns helps analysts quickly distinguish anomalies.
 
 ---
-
-## Evidence
-
-All screenshots are stored in `/screenshots`:
 
 ## Evidence
 
