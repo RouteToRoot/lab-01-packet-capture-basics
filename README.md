@@ -98,7 +98,6 @@ dns
 - UDP transport characteristics  
 - Resolved IP address  
 - Recursive resolution behavior
- 
 **Evidence:**  
 See `screenshots/dns-query.png`  
 
@@ -124,19 +123,18 @@ See `screenshots/tcp-handshake.png`
 
 ### ARP Request/Reply
 
-Filter used:
-
+**Filter used:**
+```text
 arp
+```
 
-Observations:
-
+**Observations:**
 - ARP Request: “Who has <IP address>?”
 - ARP Reply: “<IP address> is at <MAC address>”
 - This shows how devices discover each other on the local network (Layer 2)
 
 **Evidence:**  
 See `screenshots/arp-traffic.png`
-
 ---
 
 ## Detection Engineering Insights
