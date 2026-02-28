@@ -1,4 +1,4 @@
-# # SOC Lab 01 — Packet Capture & Network Analysis (Wireshark)
+# SOC Lab 01 — Packet Capture & Network Analysis (Wireshark)
 
 ## Table of Contents
 1. [Executive Summary](#executive-summary)
