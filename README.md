@@ -193,7 +193,7 @@ These are essential skills for SOC analysts, threat hunters, and IR teams.
 
 To continue developing strong SOC skills:
 
-- **SOC Lab 03 — Detecting TCP Port Scanning**
+- **SOC Lab 03 — DNS Resolution & Caching**
 - Analyze DNS exfiltration behavior  
 - Work with Suricata or Zeek logs  
 - Network baseline profiling  
