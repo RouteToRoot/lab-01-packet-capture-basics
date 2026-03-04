@@ -138,7 +138,6 @@ See `screenshots/arp-traffic.png`
 ---
 
 ## Detection Engineering Insights
-
 Packet captures support SOC teams in:
 
 ### Threat Detection
@@ -159,7 +158,6 @@ Understanding normal traffic patterns helps analysts quickly distinguish anomali
 ---
 
 ## Evidence
-
 All screenshots are stored in the `/screenshots` directory:
 
 - `interface-selected.png` — Wireshark interface chosen  
@@ -175,7 +173,6 @@ Each screenshot validates a specific stage of the lab and proves hands-on execut
 ---
 
 ## Conclusions
-
 This lab demonstrates fundamental network forensics capabilities using Wireshark, including:
 
 - DNS inspection  
@@ -188,7 +185,6 @@ These are essential skills for SOC analysts, threat hunters, and IR teams.
 ---
 
 ## Next Steps
-
 To continue developing core network analysis skills:
 
 - **SOC Lab 02 — Network Path Analysis**
