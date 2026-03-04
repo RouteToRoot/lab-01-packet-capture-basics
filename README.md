@@ -189,12 +189,11 @@ These are essential skills for SOC analysts, threat hunters, and IR teams.
 
 ## Next Steps
 
-To continue developing strong SOC skills:
+To continue developing core network analysis skills:
 
-- **SOC Lab 03 — DNS Resolution & Caching**
-- Analyze DNS exfiltration behavior  
-- Work with Suricata or Zeek logs  
-- Network baseline profiling  
-- Create detection rules for packet anomalies  
+- **SOC Lab 02 — Network Path Analysis**
+- Investigate how packets traverse networks using `ping` and `traceroute`
+- Analyze latency, hop behavior, and routing paths
+- Build foundational understanding of network troubleshooting and path visibility
 
-This lab establishes strong foundations for advanced network detection workflows.
+This progression builds the networking fundamentals required for deeper protocol analysis.
